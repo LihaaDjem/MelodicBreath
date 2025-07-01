@@ -12,6 +12,11 @@ class AudioService {
         await Tone.start();
         
         // Main melody synth
+        // Create volume controls for proper balance
+        this.melodyVolume = new Tone.Volume(-3).toDestination(); // Melody prominent
+        this.chordVolume = new Tone.Volume(-18).toDestination(); // Harmony much quieter
+        this.voiceVolume = new Tone.Volume(-8).toDestination(); // Voice in between
+
         this.synth = new Tone.Synth({
             oscillator: {
                 type: 'triangle'
@@ -22,20 +27,20 @@ class AudioService {
                 sustain: 0.5,
                 release: 0.8
             }
-        }).toDestination();
+        }).connect(this.melodyVolume);
 
-        // Chord synth for harmony
+        // Chord synth for harmony - much quieter and softer
         this.chordSynth = new Tone.PolySynth(Tone.Synth, {
             oscillator: {
-                type: 'sawtooth'
+                type: 'sine' // Changed from sawtooth to sine for softer sound
             },
             envelope: {
-                attack: 0.2,
-                decay: 0.3,
-                sustain: 0.3,
-                release: 1.5
+                attack: 0.4, // Slower attack for gentler entrance
+                decay: 0.5,
+                sustain: 0.2, // Lower sustain
+                release: 2.0 // Longer release for smooth fade
             }
-        }).toDestination();
+        }).connect(this.chordVolume);
 
         // Voice-like synth
         this.voiceSynth = new Tone.Synth({
@@ -48,12 +53,13 @@ class AudioService {
                 sustain: 0.8,
                 release: 0.5
             }
-        }).toDestination();
+        }).connect(this.voiceVolume);
 
-        // Apply some reverb for richness
-        const reverb = new Tone.Reverb(2).toDestination();
-        this.synth.connect(reverb);
-        this.voiceSynth.connect(reverb);
+        // Apply subtle reverb for richness, but keep it minimal to preserve clarity
+        const reverb = new Tone.Reverb(1).toDestination();
+        this.melodyVolume.connect(reverb);
+        this.voiceVolume.connect(reverb);
+        // Don't connect chord volume to reverb to keep harmony even more subtle
 
         this.isInitialized = true;
     }
