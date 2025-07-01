@@ -1,6 +1,5 @@
 class GeminiService {
     constructor() {
-        this.apiKey = process.env.GEMINI_API_KEY || '';
         this.baseUrl = '/api/gemini';
     }
 
