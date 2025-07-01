@@ -253,9 +253,8 @@ class AudioService {
         Tone.Transport.stop();
         Tone.Transport.cancel();
         
-        if (this.synth) this.synth.releaseAll();
-        if (this.chordSynth) this.chordSynth.releaseAll();
-        if (this.voiceSynth) this.voiceSynth.releaseAll();
+        // Tone.js synths don't have releaseAll(), they auto-release notes
+        // Just stop transport and cancel scheduled events
     }
 }
 
