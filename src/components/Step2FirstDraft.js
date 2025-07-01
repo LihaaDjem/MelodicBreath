@@ -48,6 +48,19 @@ function Step2FirstDraft({ melodyData, updateMelodyData, nextStep, prevStep }) {
         }
     };
 
+    const testAudio = async () => {
+        try {
+            const result = await window.AudioService.testAudio();
+            if (result) {
+                setError('');
+            } else {
+                setError('Audio test failed. Please check your browser audio permissions.');
+            }
+        } catch (err) {
+            setError(`Audio test error: ${err.message}`);
+        }
+    };
+
     const stopPlayback = () => {
         window.AudioService.stopAll();
         setIsPlaying(false);
@@ -115,6 +128,15 @@ function Step2FirstDraft({ melodyData, updateMelodyData, nextStep, prevStep }) {
                         >
                             <i className="fas fa-sync-alt"></i>
                             Generate New Draft
+                        </button>
+                        
+                        <button
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={testAudio}
+                            title="Test if audio is working"
+                        >
+                            <i className="fas fa-volume-up"></i>
+                            Test Audio
                         </button>
                     </div>
 

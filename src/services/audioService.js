@@ -67,8 +67,11 @@ class AudioService {
             }
 
             // Ensure Tone.js is started (requires user interaction)
+            console.log('Tone.js context state:', Tone.context.state);
             if (Tone.context.state !== 'running') {
+                console.log('Starting Tone.js context...');
                 await Tone.start();
+                console.log('Tone.js context state after start:', Tone.context.state);
             }
 
             this.stopAll();
@@ -94,8 +97,14 @@ class AudioService {
             }, Math.max(totalDuration * 1000, 1000)); // Minimum 1 second
             
         } catch (error) {
-            console.error('Audio playback error:', error);
-            throw error;
+            console.error('Audio playback error:', {
+                message: error.message,
+                name: error.name,
+                stack: error.stack,
+                toneState: Tone.context.state,
+                melodyLength: melody ? melody.length : 0
+            });
+            throw new Error(`Audio playback failed: ${error.message || 'Unknown error'}`);
         }
     }
 
@@ -217,6 +226,27 @@ class AudioService {
 
         // Convert beats to seconds (assuming 120 BPM)
         return (totalBeats * 60) / (Tone.Transport.bpm.value || 120);
+    }
+
+    async testAudio() {
+        try {
+            await this.initialize();
+            
+            console.log('Testing audio context...');
+            console.log('Tone.js context state:', Tone.context.state);
+            
+            if (Tone.context.state !== 'running') {
+                await Tone.start();
+            }
+            
+            // Play a simple test note
+            this.synth.triggerAttackRelease('C4', '8n');
+            console.log('Test audio played successfully');
+            return true;
+        } catch (error) {
+            console.error('Test audio failed:', error);
+            return false;
+        }
     }
 
     stopAll() {
