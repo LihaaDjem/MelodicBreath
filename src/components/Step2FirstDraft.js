@@ -17,9 +17,14 @@ function Step2FirstDraft({ melodyData, updateMelodyData, nextStep, prevStep }) {
         
         try {
             const melody = await window.GeminiService.generateMelody(melodyData.emotion, melodyData.context);
-            updateMelodyData({ melody });
+            if (melody && melody.length > 0) {
+                updateMelodyData({ melody });
+                setError('');
+            } else {
+                throw new Error('Empty melody received');
+            }
         } catch (err) {
-            setError('Failed to generate melody. Please try again.');
+            setError(`Failed to generate melody: ${err.message || 'Unknown error'}. Please try again.`);
             console.error('Melody generation error:', err);
         } finally {
             setIsGenerating(false);
@@ -27,13 +32,17 @@ function Step2FirstDraft({ melodyData, updateMelodyData, nextStep, prevStep }) {
     };
 
     const playMelody = async () => {
-        if (melodyData.melody.length === 0) return;
+        if (!melodyData.melody || melodyData.melody.length === 0) {
+            setError('No melody to play. Please generate a melody first.');
+            return;
+        }
         
         setIsPlaying(true);
         try {
             await window.AudioService.playMelody(melodyData.melody, melodyData.tempo);
         } catch (err) {
             console.error('Playback error:', err);
+            setError(`Playback failed: ${err.message || 'Audio error'}. Please try again.`);
         } finally {
             setIsPlaying(false);
         }

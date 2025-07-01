@@ -59,27 +59,44 @@ class AudioService {
     }
 
     async playMelody(melody, tempo = 120) {
-        await this.initialize();
-        
-        if (!melody || melody.length === 0) return;
+        try {
+            await this.initialize();
+            
+            if (!melody || melody.length === 0) {
+                throw new Error('No melody to play');
+            }
 
-        this.stopAll();
-        
-        Tone.Transport.bpm.value = tempo;
-        
-        const sequence = new Tone.Sequence((time, note) => {
-            this.synth.triggerAttackRelease(note.note, note.duration, time);
-        }, melody, "4n");
+            // Ensure Tone.js is started (requires user interaction)
+            if (Tone.context.state !== 'running') {
+                await Tone.start();
+            }
 
-        sequence.start(0);
-        Tone.Transport.start();
+            this.stopAll();
+            
+            Tone.Transport.bpm.value = tempo;
+            
+            const sequence = new Tone.Sequence((time, note) => {
+                if (this.synth && note && note.note && note.duration) {
+                    this.synth.triggerAttackRelease(note.note, note.duration, time);
+                }
+            }, melody, "4n");
 
-        // Stop after the melody duration
-        const totalDuration = this.calculateSequenceDuration(melody);
-        setTimeout(() => {
-            sequence.dispose();
-            Tone.Transport.stop();
-        }, totalDuration * 1000);
+            sequence.start(0);
+            Tone.Transport.start();
+
+            // Stop after the melody duration
+            const totalDuration = this.calculateSequenceDuration(melody);
+            setTimeout(() => {
+                if (sequence) {
+                    sequence.dispose();
+                }
+                Tone.Transport.stop();
+            }, Math.max(totalDuration * 1000, 1000)); // Minimum 1 second
+            
+        } catch (error) {
+            console.error('Audio playback error:', error);
+            throw error;
+        }
     }
 
     async playMelodyWithChords(melody, chordProgression, tempo = 120) {

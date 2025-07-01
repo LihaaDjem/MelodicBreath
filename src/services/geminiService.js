@@ -21,7 +21,18 @@ class GeminiService {
             }
 
             const data = await response.json();
-            return this.parseMelodyResponse(data.melody);
+            
+            // Check if the response already contains a parsed melody
+            if (data.success && Array.isArray(data.melody)) {
+                return data.melody;
+            }
+            
+            // If not, try to parse the original response
+            if (data.original_response) {
+                return this.parseMelodyResponse(data.original_response);
+            }
+            
+            throw new Error('Invalid response format');
         } catch (error) {
             console.error('Gemini API error:', error);
             // Fallback to a simple generated melody
