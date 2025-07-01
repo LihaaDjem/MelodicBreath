@@ -1,0 +1,151 @@
+Replit Prompt: "The Melodic Breath" App MVP
+I want to develop the MVP (Minimum Viable Product) of a cross-platform mobile application named "The Melodic Breath". The goal is to guide young musicians through a simple and intuitive process of creating memorable melodies, based on an initial emotion and using AI (Gemini) for generation.
+
+Technologies:
+
+Frontend: React Native (with Expo for simplified setup and building).
+
+Audio/MIDI Logic: Tone.js (for note/rhythm generation and manipulation) and the native Web Audio API.
+
+Artificial Intelligence: Google Gemini API (for initial melody generation and suggestions).
+
+Language: JavaScript / TypeScript (Replit should ideally set up a React Native environment with TypeScript).
+
+Detailed MVP Features (Step-by-Step):
+The application should follow these steps:
+
+Step 1: The Initial Breath - Emotion and Intention
+UI: A welcoming home screen with a catchy title.
+
+A mandatory TextInput for "What emotion do you want to express?" (Placeholder: "Joy, Sadness, Hope...").
+
+An optional TextInput for "Describe the context or story..." (Placeholder: "The joy of an unexpected meeting...").
+
+A TouchableHighlight or TouchableOpacity button: "Start Melody".
+
+Logic: Input field values must be stored in the app's state. The button should navigate to Step 2.
+
+Step 2: The Intuitive Draft - The First Take
+UI:
+
+Display an encouraging message: "Here's your first melodic breath!"
+
+An "Listen to First Draft" button.
+
+A "Modify First Draft" button (to navigate to Step 3).
+
+Generation Logic (MVP Core):
+
+Upon entering this screen, the application must call the Gemini API.
+
+Gemini Prompt: Construct a dynamic prompt using the user's chosen emotion and context.
+
+Example: `Generate a simple, memorable melodic sequence of 4 to 8 measures to express the emotion of "emotion"withacontextof"{context}". Use a ${emotion === 'Joy' || emotion === 'Hope' ? 'major' : 'minor'} scale. Represent the melody as a list of JSON objects { note: 'C4', duration: '4n' }. Make sure the response is only the JSON, with no explanatory text.`
+
+Gemini Constraints: Clearly specify the desired output format (e.g., [{ "note": "C4", "duration": "4n" }, { "note": "D4", "duration": "8n" }]) for easy parsing.
+
+Parsing: Parse Gemini's JSON response to get the sequence of notes and durations.
+
+Audio Playback: Use Tone.js to create a Synth and play the generated note sequence when the user taps "Listen to First Draft".
+
+(Optional but desired: A very simple visual representation of the draft, like a series of colored dots for each note.)
+
+Step 3: The Invisible Structure - Tension and Resolution
+UI:
+
+Visual display of the current melody (simple note representation).
+
+Two Slider components or button groups:
+
+"Melodic Tension": Impacts pitches (makes it more ascending, adds leaps).
+
+"Resolution/Rest": Impacts pitches (brings it back towards tonic notes).
+
+An "Listen" button to preview changes.
+
+Logic:
+
+When the user manipulates the sliders, modifications are applied to the note sequence.
+
+(Simplification for MVP:) These sliders can modify the pitch of certain notes using simple algorithmic rules (e.g., increase tension = raise pitch of a specific note, resolve = lower it). Advanced Gemini integration for contextual tension/resolution suggestions is for V2.
+
+Step 4: Ingenious Simplicity - Less Is Often More
+UI:
+
+Display of the current melody.
+
+Buttons:
+
+"Simplify Melody": Reduce the number of notes or simplify rhythms.
+
+"Repeat with Variations": Duplicate a section and apply a small modification (e.g., change a note, invert a small phrase).
+
+An "Listen" button.
+
+Logic: Implement simple algorithms for simplification (e.g., remove consecutive short notes and lengthen the preceding one) and variation (e.g., shift a note by a semitone).
+
+Step 5: Rhythm and Breath - The Beat of Life
+UI:
+
+Display of the melody with a rhythmic representation (visualizing note durations).
+
+A Slider for "Tempo" (slow, moderate, fast, with BPM indication).
+
+Buttons to manipulate note durations (e.g., select a note, then "Lengthen", "Shorten" buttons).
+
+An "Listen" button.
+
+Logic: Modify the duration properties of note objects in the sequence. Update the Synth's tempo in Tone.js.
+
+Step 6: Subtle Harmony - The Sound Carpet
+UI:
+
+Display of the melody.
+
+A dropdown list or buttons to choose simple chord progressions (e.g., "Joyful Pop (C-G-Am-F)", "Sad (Am-G-C-F)", "Basic (C-F-G-C)").
+
+An "Listen with Chords" button.
+
+Logic:
+
+Use Tone.js to play the chords in the background while the melody plays.
+
+Chords should be pre-defined and associated with moods.
+
+Step 7: Arrangement and Timbre - The Casing (MVP: Human Voice)
+UI:
+
+Display of the final melody and chords.
+
+"Listen in Human Voice" button.
+
+RadioButton or Picker options for "Male Voice" / "Female Voice".
+
+"Save My Melody" button.
+
+"Share" button.
+
+Logic:
+
+Use Web Audio API or a simple library to generate "la la la" or "doo doo doo" sounds for each note in the melody. The "male voice" will be a lower-pitched version or with a slightly different timbre.
+
+Saving will be local storage on the device (via React Native's AsyncStorage).
+
+Sharing can generate a text URL with the note sequence, or a native share option for a simple screenshot of the interface.
+
+Instructions for Replit:
+Create a New Repl: Choose the "React Native" template, or "Node.js" if the React Native template isn't directly available and you need to configure it manually (which is more complex). Ideally, Replit should have an React Native (Expo) environment ready.
+
+Install Dependencies:
+
+npm install tone @google/generative-ai @react-native-async-storage/async-storage
+
+Ensure the Node.js/React Native environment is set up to access dependencies.
+
+Gemini API Key: The code should read the Gemini API key from a Replit environment variable (e.g., process.env.EXPO_PUBLIC_GEMINI_API_KEY) for security.
+
+Project Structure: Organize the code into React components for each step and separate logic files for Gemini generation and audio playback.
+
+Execution: Explain how to run the application on Replit (usually via npm start and by scanning the Expo QR code on a mobile device).
+
+Replit Goal: Provide a functional React Native project where users can navigate through the 7 steps, generate an initial melody via Gemini, manipulate it with basic tools, and listen to it using a synthesized human voice.
