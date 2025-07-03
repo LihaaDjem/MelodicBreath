@@ -1,6 +1,8 @@
 class GeminiService {
     constructor() {
         this.baseUrl = '/api/gemini';
+        // Nouvelle version (absolue, utilisez l'adresse IP de votre machine) :
+        //this.baseUrl = 'http://192.168.1.19:5000/api/gemini';
     }
 
     async generateMelody(emotion, context = '') {

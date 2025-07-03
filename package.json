@@ -12,6 +12,7 @@
   "dependencies": {
     "@google/genai": "^1.7.0",
     "@google/generative-ai": "^0.24.1",
+    "dotenv": "^17.0.1",
     "express": "^4.19.2",
     "tone": "^15.1.22"
   }
