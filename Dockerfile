@@ -26,7 +26,8 @@ COPY . .
 # Cloud Run injectera la variable PORT, mais pour Dockerfile, 
 # c'est mieux d'avoir une valeur par défaut ou de s'assurer que votre app l'utilise.
 # Votre server.js utilise déjà process.env.PORT || 5000, ce qui est parfait.
-EXPOSE 8080 # Cloud Run attend que votre application écoute sur $PORT (qui est 8080 par défaut dans Cloud Run)
+# Cloud Run attend que votre application écoute sur $PORT (8080 par défaut dans Cloud Run)
+EXPOSE 8080 
 
 # Commande pour démarrer votre application
 CMD ["node", "server.js"]
